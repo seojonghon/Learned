@@ -1,0 +1,609 @@
+# 도커 실습 환경 세팅
+
+## **Docker Desktop**
+
+```jsx
+https://docs.docker.com/desktop/
+
+원 클릭 설치 애플리케이션
+
+간단한 GUI를 제공
+
+주요 기능
+
+- 여러 언어 및 프레임워크로 모든 클라우드 플랫폼에서 모든 **애플리케이션을 컨테이너화하고 공유할 수 있는 기능**
+- 도커 개발 환경을 빠르게 설치하고 설정할 수 있음
+- 최신 버전의 쿠버네티스를 포함
+- 기본적으로 Hyper-V 가상화를 통한 빠르고 안정적인 성능을 제공
+- WSL2를 통해 Linux에서 기본적으로 작업할 수 있음
+```
+
+## 01 설치 파일 다운로드
+
+!https://blog.kakaocdn.net/dn/Dtwgn/btr0yhOOYWF/RdYcAkjgQ7xuTD41QGtDRk/img.png
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/1b8cc88d-9972-478f-9c35-51d6c2e63848/85cb8f8a-03a4-4a40-8886-ebb9138278c4/Untitled.png)
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/1b8cc88d-9972-478f-9c35-51d6c2e63848/da32efc0-451d-4233-a878-de1ccf334bf9/Untitled.png)
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/1b8cc88d-9972-478f-9c35-51d6c2e63848/0fe6611a-5acb-4000-9b1e-2b10a6af88a5/Untitled.png)
+
+도커 설치확인
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/1b8cc88d-9972-478f-9c35-51d6c2e63848/03467961-6cc1-4d8b-963b-fa323dc6a2fc/Untitled.png)
+
+도커에 최신버전 우분투 이미지 설치
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/1b8cc88d-9972-478f-9c35-51d6c2e63848/23a1e80a-13de-4e85-927e-e93d344bfbe6/Untitled.png)
+
+# **Dockerfile을 이용한 도커 이미지 빌드**
+
+https://lh3.googleusercontent.com/cQ2tMbEHKNgAOh8I92-lTt1ppbBIWw2vXTARh_LAc8uc8XPa9x0HKjr4Aa_7dluQOdcOojbq5G8MqDqMkwyZnXQeZchpG1KN8EoDYDtZKBlaciLtmlkG8BpaZBA4H4G8jeF9ZSmdhMCGdPBsQg6KTkc
+
+## **Dockerfile**
+
+https://docs.docker.com/engine/reference/builder/
+
+도커 이미지를 빌드하는데 필요한 모든 명령어를 순서대로 기술한 텍스트 파일
+
+## **docker image build = docker build**
+
+```jsx
+- Dockerfile 및 컨텍스트(context)에서 Docker 이미지를 빌드할 때 사용하는 명령
+
+~~~~~~~~~~    ~~~~~~~~~~~~~~~~~
+
+|              |
+
+|              +--  지정된 경로(PATH) 또는 URL에 있는 파일 세트
+
+|                   build 프로세스는 컨텍스테에 있는 모든 파일을 참조할 수 있음
+
+|
+
++-- 컨테이너에 설치해야 하는 패키지(FROM), 추가해야 하는 소스코드(ADD, COPY),
+
+실행해야 하는 명령어와 쉘 스크립트(RUN, CMD) 등을 기록한 파일
+
+- Dockerfile을 사용하면 직접 컨테이너를 생성하고 이미지로 커밋해야 하는 번거로움을 덜 수 있을 뿐 아니라 깃과 같은 개발 도구를 통해 애플리케이션의 빌드 및 배포를 자동화할 수 있음
+```
+
+## **작업 디렉터리를 생성하고, main.go 파일을 작성**
+
+```powershell
+C:\Users\myanj> cd /
+
+C:\> mkdir docker
+
+C:\> cd docker
+
+C:\docker> code .
+
+C:\docker\main.go
+
+package main
+
+import (
+
+"log"
+
+)
+
+func main() {
+
+log.Println("received request")
+
+})
+
+log.Println("start server")
+
+if err := server.ListenAndServe(); err != nil {
+
+}
+```
+
+---
+
+8080 포트로 HTTP 요청을 대기하다가, /로 요청이 들어오면 Hello Docker!!!를 응답으로 반환하는 프로그램
+
+https://lh6.googleusercontent.com/ZAfLuCHH71ZjCV7gsvlqaALVXkVq_4YNhPHM7S0k87JYDYPfjxmOocV0zWqyeLV-ZayaLeh-IrupgtTclmpj2WirSQQtGzsMgNjUtxtwbmp_fTtzz9fses-tiykj362ZXxdrVbvIDFOAiuxHJilpZIA
+
+## **개발 환경(PC)에서 main.go를 실행**
+
+### **go를 다운로드해서 설치**
+
+https://go.dev/dl/
+
+### **명령 프롬프트를 새로 실행한 후 작업 디렉터리로 이동해서 main.go를 실행**
+
+```powershell
+c:\docker> go run main.go
+
+2023/09/21 10:33:03 start server
+```
+
+### **http://localhost:8080/ 으로 접속**
+
+https://lh6.googleusercontent.com/0bSvuQDYdBNmEfcapUHbhJhgIa70FbeWL3dgqtR1WyNXdPB9BQ53NxAzjqZ_pkMGxmbYWNoQeoTGaQzqQdkve77vJxEVNHer0GO8xHSrphhnvIybffFc_zWtRSLVHXh-zrklp_DwNkB7kmbdNDAc1Iw
+
+```powershell
+C:\docker> curl http://localhost:8080/
+```
+
+Hello Docker!!
+
+### **Dockerfile 작성**
+
+```go
+C:\docker\Dockerfile
+
+FROM  golang:1.9
+
+RUN   mkdir /echo
+
+COPY  main.go /echo
+
+CMD   ["go", "run", "/echo/main.go"]
+```
+
+**FROM**  golang:1.9				⇐ 베이스 이미지를 지정
+
+저장소 이름을 명시하지 않으면 도커 호브 공식 이미지
+
+https://docs.docker.com/engine/reference/builder/#from
+
+**RUN**   mkdir /echo 				⇐ 컨테이너 내부에서 실행할 명령어를 지정
+
+**COPY**  main.go /echo				⇐ 호스트의 main.go 파일을 컨테이너의 /echo/main.go로 복사
+
+**CMD**   ["go", "run", "/echo/main.go"]		⇐ 컨테이너 실행 시 실행할 명령어 → go run /echo/main.go
+
+```go
+C:\docker> docker image build -t example/echo:latest **.**
+```
+
+**~**
+
+**Dockerfile이 위치하는 곳**
+
+```jsx
+[+] Building 3.3s (8/8) FINISHED                                                               docker:default
+
+=> [internal] load build definition from Dockerfile                                                     0.0s
+
+=> => transferring dockerfile: 131B                                                                     0.0s
+
+=> [internal] load .dockerignore                                                                        0.0s
+
+=> => transferring context: 2B                                                                          0.0s
+
+=> [internal] load metadata for docker.io/library/golang:1.9                                            3.2s
+
+=> [1/3] FROM docker.io/library/golang:1.9@sha256:8b5968585131604a92af02f5690713efadf029cc8dad53f79280  0.0s
+
+=> [internal] load build context                                                                        0.0s
+
+=> => transferring context: 29B                                                                         0.0s
+
+=> CACHED [2/3] RUN   mkdir /echo                                                                       0.0s
+
+=> CACHED [3/3] COPY  main.go /echo                                                                     0.0s
+
+=> exporting to image                                                                                   0.0s
+
+=> => exporting layers                                                                                  0.0s
+
+=> => writing image sha256:d8e377053162c73cbbb65504c930c46b67820f5e4255bb85d9748a8cc0e8a701             0.0s
+
+=> => naming to docker.io/example/echo:latest                                                           0.0s
+```
+
+```go
+C:\docker> docker buildx build -t example/echo:latest .
+                                                      ~ 
+                                                      Dockerfile이 위치하는 곳  
+[+] Building 3.3s (8/8) FINISHED                                                               docker:default
+ => [internal] load build definition from Dockerfile                                                     0.0s
+ => => transferring dockerfile: 131B                                                                     0.0s
+ => [internal] load .dockerignore                                                                        0.0s
+ => => transferring context: 2B                                                                          0.0s
+ => [internal] load metadata for docker.io/library/golang:1.9                                            3.2s
+ => [1/3] FROM docker.io/library/golang:1.9@sha256:8b5968585131604a92af02f5690713efadf029cc8dad53f79280  0.0s
+ => [internal] load build context                                                                        0.0s
+ => => transferring context: 29B                                                                         0.0s
+ => CACHED [2/3] RUN   mkdir /echo                                                                       0.0s
+ => CACHED [3/3] COPY  main.go /echo                                                                     0.0s
+ => exporting to image                                                                                   0.0s
+ => => exporting layers                                                                                  0.0s
+ => => writing image sha256:40ca3845f13a039a679dbb1a7d3d667524561e88acc19f52f936890a24a8fea4             0.0s
+ => => naming to docker.io/example/echo:latest                                                           0.0s
+
+C:\docker> docker image ls
+REPOSITORY     TAG       IMAGE ID       CREATED        SIZE
+example/echo   latest    40ca3845f13a   4 minutes ago   750MB
+
+C:\docker> docker images
+REPOSITORY     TAG       IMAGE ID       CREATED         SIZE
+example/echo   latest    40ca3845f13a   4 minutes ago   750MB
+```
+
+```go
+https://hub.docker.com/layers/library/golang/1.9/images/sha256-ef89ef5c42a90ec98bda7bbef0495c1ca6f43a31d059148c368b71858de463d2?context=explore
+1.9: Pulling from library/golang
+55cbf04beb70: Already exists
+1607093a898c: Already exists
+9a8ea045c926: Already exists
+d4eee24d4dac: Already exists
+9c35c9787a2f: Already exists
+8b376bbb244f: Already exists
+0d4eafcc732a: Already exists
+186b06a99029: Already exists
+Digest: sha256:8b5968585131604a92af02f5690713efadf029cc8dad53f79280b87a80eb1354
+Status: Downloaded newer image for golang:1.9
+docker.io/library/golang:1.9
+
+C:\docker> docker image ls
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+example/echo   latest    40ca3845f13a   16 minutes ago   750MB
+golang         1.9       ef89ef5c42a9   5 years ago      750MB
+```
+
+```jsx
+C:\docker> docker buildx build -t example/echo:latest .
+[+] Building 0.1s (8/8) FINISHED                                                               docker:default
+ => [internal] load .dockerignore                                                                        0.0s
+ => => transferring context: 2B                                                                          0.0s
+ => [internal] load build definition from Dockerfile                                                     0.0s
+ => => transferring dockerfile: 131B                                                                     0.0s
+ => [internal] load metadata for docker.io/library/golang:1.9                                            0.0s
+ => [1/3] FROM docker.io/library/golang:1.9                                                              0.0s
+ => [internal] load build context                                                                        0.0s
+ => => transferring context: 29B                                                                         0.0s
+ => CACHED [2/3] RUN   mkdir /echo                                                                       0.0s
+ => CACHED [3/3] COPY  main.go /echo                                                                     0.0s
+ => exporting to image                                                                                   0.0s
+ => => exporting layers                                                                                  0.0s
+ => => writing image sha256:40ca3845f13a039a679dbb1a7d3d667524561e88acc19f52f936890a24a8fea4             0.0s
+ => => naming to docker.io/example/echo:latest
+```
+
+```jsx
+C:\docker> docker image ls
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+example/echo   latest    40ca3845f13a   24 minutes ago   750MB	⇐ 내용 변경이 없기 때문에 
+golang         1.9       ef89ef5c42a9   5 years ago      750MB  	   이미지가 새로 생성되지 않음
+```
+
+```jsx
+C:\docker> docker buildx build --no-cache -t example/echo:latest .
+[+] Building 0.5s (8/8) FINISHED                                                               docker:default
+ => [internal] load build definition from Dockerfile                                                     0.0s
+ => => transferring dockerfile: 131B                                                                     0.0s
+ => [internal] load .dockerignore                                                                        0.0s
+ => => transferring context: 2B                                                                          0.0s
+ => [internal] load metadata for docker.io/library/golang:1.9                                            0.0s
+ => CACHED [1/3] FROM docker.io/library/golang:1.9                                                       0.0s
+ => [internal] load build context                                                                        0.0s
+ => => transferring context: 29B                                                                         0.0s
+ => [2/3] RUN   mkdir /echo                                                                              0.3s
+ => [3/3] COPY  main.go /echo                                                                            0.0s
+ => exporting to image                                                                                   0.0s
+ => => exporting layers                                                                                  0.0s
+ => => writing image sha256:c3663f350588480e7f92671637c1b84d83f017e172d11f89979553d17ae4563d             0.0s
+ => => naming to docker.io/example/echo:latest                                                           0.0s
+
+C:\docker> docker image ls
+REPOSITORY     TAG       IMAGE ID       CREATED              SIZE
+example/echo   latest    c3663f350588   About a minute ago   750MB	⇐ 새로 생성된 이미지
+<none>         <none>    40ca3845f13a   26 minutes ago       750MB	⇐ 이전에 생성되었던 이미지 
+golang         1.9       ef89ef5c42a9   5 years ago          750MB	   → 이름이 사라짐 ⇒ dangling image
+```
+
+```jsx
+C:\docker> docker image ls
+REPOSITORY     TAG       IMAGE ID       CREATED              SIZE
+example/echo   latest    c3663f350588   About a minute ago   750MB
+<none>         <none>    40ca3845f13a   26 minutes ago       750MB
+golang         1.9       ef89ef5c42a9   5 years ago          750MB
+```
+
+```jsx
+C:\docker> docker image ls example/echo:latest
+REPOSITORY     TAG       IMAGE ID       CREATED         SIZE
+example/echo   latest    c3663f350588   6 minutes ago   750MB
+```
+
+```jsx
+C:\docker> docker image ls -f "dangling=true"
+REPOSITORY   TAG       IMAGE ID       CREATED          SIZE
+<none>       <none>    40ca3845f13a   33 minutes ago   750MB
+```
+
+```jsx
+C:\docker> docker image rm 40ca3845f13a				⇐ 이미지 ID를 이용해서 삭제
+Deleted: sha256:40ca3845f13a039a679dbb1a7d3d667524561e88acc19f52f936890a24a8fea4
+```
+
+```jsx
+C:\docker> docker image ls
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+example/echo   latest    c3663f350588   10 minutes ago   750MB
+golang         1.9       ef89ef5c42a9   5 years ago      750MB
+```
+
+**main.go 내용을 변경한 후 도커 빌드**
+
+```jsx
+
+package main
+
+import (
+    "fmt"
+    "log"
+    "net/http"
+)
+
+func main() {
+    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+        log.Println("received request")
+        fmt.Fprintf(w, "Hello Docker ^^!!")
+    })
+
+    log.Println("start server")
+    server := &http.Server{Addr: ":8080"}
+    if err := server.ListenAndServe(); err != nil {
+        log.Println(err)
+    }
+```
+
+```jsx
+C:\docker> docker buildx build -t example/echo:latest .
+[+] Building 0.2s (8/8) FINISHED                                                               docker:default
+ => [internal] load build definition from Dockerfile                                                     0.0s
+ => => transferring dockerfile: 131B                                                                     0.0s
+ => [internal] load .dockerignore                                                                        0.0s
+ => => transferring context: 2B                                                                          0.0s
+ => [internal] load metadata for docker.io/library/golang:1.9                                            0.0s
+ => [1/3] FROM docker.io/library/golang:1.9                                                              0.0s
+ => [internal] load build context                                                                        0.0s
+ => => transferring context: 409B                                                                        0.0s
+ => CACHED [2/3] RUN   mkdir /echo                                                                       0.0s
+ => [3/3] COPY  main.go /echo                                                                            0.0s
+ => exporting to image                                                                                   0.0s
+ => => exporting layers                                                                                  0.0s
+ => => writing image sha256:199bae77e82afe1091a393f1bd5f1b27303df900280818c68a3425db94d963f9             0.0s
+ => => naming to docker.io/example/echo:latest                                                           0.0s
+
+C:\docker> docker image ls
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+example/echo   latest    199bae77e82a   2 minutes ago    750MB
+<none>         <none>    c3663f350588   15 minutes ago   750MB
+golang         1.9       ef89ef5c42a9   5 years ago      750MB
+```
+
+# **도커 컨테이너 실행**
+
+## **docker container run = docker run**
+
+     attach는 **실행되고 있는 컨테이너에 접속하는 명령어**
+
+```jsx
+C:\docker> docker container --help
+
+Usage:  docker container COMMAND
+
+Manage containers
+
+Commands:
+  attach      Attach local standard input, output, and error streams to a running container
+  commit      Create a new image from a container's changes
+  cp          Copy files/folders between a container and the local filesystem
+  create      Create a new container
+  diff        Inspect changes to files or directories on a container's filesystem
+  exec        Execute a command in a running container
+  export      Export a container's filesystem as a tar archive
+  inspect     Display detailed information on one or more containers
+  kill        Kill one or more running containers
+  logs        Fetch the logs of a container
+  ls          List containers
+  pause       Pause all processes within one or more containers
+  port        List port mappings or a specific mapping for the container
+  prune       Remove all stopped containers
+  rename      Rename a container
+  restart     Restart one or more containers
+  rm          Remove one or more containers
+  run         Create and run a new container from an image
+  start       Start one or more stopped containers
+  stats       Display a live stream of container(s) resource usage statistics
+  stop        Stop one or more running containers
+  top         Display the running processes of a container
+  unpause     Unpause all processes within one or more containers
+  update      Update configuration of one or more containers
+  wait        Block until one or more containers stop, then print their exit codes
+```
+
+```c
+C:\docker> docker container run --help
+
+Usage:  docker container run [OPTIONS] IMAGE [COMMAND] [ARG...]
+
+Create and run a new container from an image
+
+Aliases:
+  docker container run, docker run
+
+Options:
+      --add-host list                  Add a custom host-to-IP mapping
+                                       (host:ip)
+      --annotation map                 Add an annotation to the container
+                                       (passed through to the OCI
+                                       runtime) (default map[])
+  -a, --attach list                    Attach to STDIN, STDOUT or STDERR
+      --blkio-weight uint16            Block IO (relative weight),
+                                       between 10 and 1000, or 0 to
+                                       disable (default 0)
+      --blkio-weight-device list       Block IO weight (relative device
+                                       weight) (default [])
+      --cap-add list                   Add Linux capabilities
+      --cap-drop list                  Drop Linux capabilities
+      --cgroup-parent string           Optional parent cgroup for the
+                                       container
+      --cgroupns string                Cgroup namespace to use
+                                       (host|private)
+                                       'host':    Run the container in
+                                       the Docker host's cgroup namespace
+                                       'private': Run the container in
+                                       its own private cgroup namespace
+                                       '':        Use the cgroup
+                                       namespace as configured by the
+                                                  default-cgroupns-mode
+                                       option on the daemon (default)
+      --cidfile string                 Write the container ID to the file
+      --cpu-period int                 Limit CPU CFS (Completely Fair
+                                       Scheduler) period
+      --cpu-quota int                  Limit CPU CFS (Completely Fair
+                                       Scheduler) quota
+      --cpu-rt-period int              Limit CPU real-time period in
+                                       microseconds
+      --cpu-rt-runtime int             Limit CPU real-time runtime in
+                                       microseconds
+  -c, --cpu-shares int                 CPU shares (relative weight)
+      --cpus decimal                   Number of CPUs
+      --cpuset-cpus string             CPUs in which to allow execution
+                                       (0-3, 0,1)
+      --cpuset-mems string             MEMs in which to allow execution
+                                       (0-3, 0,1)
+  -d, --detach                         Run container in background and
+                                       print container ID
+      --detach-keys string             Override the key sequence for
+                                       detaching a container
+      --device list                    Add a host device to the container
+      --device-cgroup-rule list        Add a rule to the cgroup allowed
+                                       devices list
+      --device-read-bps list           Limit read rate (bytes per second)
+                                       from a device (default [])
+      --device-read-iops list          Limit read rate (IO per second)
+                                       from a device (default [])
+      --device-write-bps list          Limit write rate (bytes per
+                                       second) to a device (default [])
+      --device-write-iops list         Limit write rate (IO per second)
+                                       to a device (default [])
+      --disable-content-trust          Skip image verification (default true)
+      --dns list                       Set custom DNS servers
+      --dns-option list                Set DNS options
+      --dns-search list                Set custom DNS search domains
+      --domainname string              Container NIS domain name
+      --entrypoint string              Overwrite the default ENTRYPOINT
+                                       of the image
+  -e, --env list                       Set environment variables
+      --env-file list                  Read in a file of environment variables
+      --expose list                    Expose a port or a range of ports
+      --gpus gpu-request               GPU devices to add to the
+                                       container ('all' to pass all GPUs)
+      --group-add list                 Add additional groups to join
+      --health-cmd string              Command to run to check health
+      --health-interval duration       Time between running the check
+                                       (ms|s|m|h) (default 0s)
+      --health-retries int             Consecutive failures needed to
+                                       report unhealthy
+      --health-start-period duration   Start period for the container to
+                                       initialize before starting
+                                       health-retries countdown
+                                       (ms|s|m|h) (default 0s)
+      --health-timeout duration        Maximum time to allow one check to
+                                       run (ms|s|m|h) (default 0s)
+      --help                           Print usage
+  -h, --hostname string                Container host name
+      --init                           Run an init inside the container
+                                       that forwards signals and reaps
+                                       processes
+  -i, --interactive                    Keep STDIN open even if not attached
+      --ip string                      IPv4 address (e.g., 172.30.100.104)
+      --ip6 string                     IPv6 address (e.g., 2001:db8::33)
+      --ipc string                     IPC mode to use
+      --isolation string               Container isolation technology
+      --kernel-memory bytes            Kernel memory limit
+  -l, --label list                     Set meta data on a container
+      --label-file list                Read in a line delimited file of labels
+      --link list                      Add link to another container
+      --link-local-ip list             Container IPv4/IPv6 link-local
+                                       addresses
+      --log-driver string              Logging driver for the container
+      --log-opt list                   Log driver options
+      --mac-address string             Container MAC address (e.g.,
+                                       92:d0:c6:0a:29:33)
+  -m, --memory bytes                   Memory limit
+      --memory-reservation bytes       Memory soft limit
+      --memory-swap bytes              Swap limit equal to memory plus
+                                       swap: '-1' to enable unlimited swap
+      --memory-swappiness int          Tune container memory swappiness
+                                       (0 to 100) (default -1)
+      --mount mount                    Attach a filesystem mount to the
+                                       container
+      --name string                    Assign a name to the container
+      --network network                Connect a container to a network
+      --network-alias list             Add network-scoped alias for the
+                                       container
+      --no-healthcheck                 Disable any container-specified
+                                       HEALTHCHECK
+      --oom-kill-disable               Disable OOM Killer
+      --oom-score-adj int              Tune host's OOM preferences (-1000
+                                       to 1000)
+      --pid string                     PID namespace to use
+      --pids-limit int                 Tune container pids limit (set -1
+                                       for unlimited)
+      --platform string                Set platform if server is
+                                       multi-platform capable
+      --privileged                     Give extended privileges to this
+                                       container
+  -p, --publish list                   Publish a container's port(s) to
+                                       the host
+  -P, --publish-all                    Publish all exposed ports to
+                                       random ports
+      --pull string                    Pull image before running
+                                       ("always", "missing", "never")
+                                       (default "missing")
+  -q, --quiet                          Suppress the pull output
+      --read-only                      Mount the container's root
+                                       filesystem as read only
+      --restart string                 Restart policy to apply when a
+                                       container exits (default "no")
+      --rm                             Automatically remove the container
+                                       when it exits
+      --runtime string                 Runtime to use for this container
+      --security-opt list              Security Options
+      --shm-size bytes                 Size of /dev/shm
+      --sig-proxy                      Proxy received signals to the
+                                       process (default true)
+      --stop-signal string             Signal to stop the container
+      --stop-timeout int               Timeout (in seconds) to stop a
+                                       container
+      --storage-opt list               Storage driver options for the
+                                       container
+      --sysctl map                     Sysctl options (default map[])
+      --tmpfs list                     Mount a tmpfs directory
+  -t, --tty                            Allocate a pseudo-TTY
+      --ulimit ulimit                  Ulimit options (default [])
+  -u, --user string                    Username or UID (format:
+                                       <name|uid>[:<group|gid>])
+      --userns string                  User namespace to use
+      --uts string                     UTS namespace to use
+  -v, --volume list                    Bind mount a volume
+      --volume-driver string           Optional volume driver for the
+                                       container
+      --volumes-from list              Mount volumes from the specified
+                                       container(s)
+  -w, --workdir string                 Working directory inside the container
+```
+
+-i (입력), -t (출력) , -d 가 제일중요! -u(유저) 디폴트는 루트 
+
+C:\docker> docker container run -p 80:8080 example/echo:latest		**⇐ -d 옵션을 사용하지 않으면 기본적으로**
+
+2023/09/21 05:16:50 start server						   **attach 모드로 실행**
+
+2023/09/21 05:17:22 received request
+
+2023/09/21 05:17:22 received request
+
+브라우저를 통해서 localhost:80 으로 요청해서 응답을 받는 것은 가능하나, ... 어떤 키 입력도 전달되지 않는 문제가 있음
