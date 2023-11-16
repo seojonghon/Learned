@@ -1,0 +1,108 @@
+# 호스트와 컨테이너 사이 파일 복사
+
+****호스트와 컨테이너 간 파일 복사****
+
+```powershell
+c:\docker\volume> echo "test" > test.txt
+```
+
+```powershell
+c:\docker\volume> dir
+
+C 드라이브의 볼륨에는 이름이 없습니다.
+
+볼륨 일련 번호: D0A5-3978
+```
+
+```powershell
+c:\docker\volume 디렉터리
+```
+
+```powershell
+2023-09-25  오후 02:41    <DIR>          .
+2023-09-25  오후 02:41    <DIR>          ..
+2023-09-25  오후 12:08    <DIR>          data
+2023-09-25  오전 11:28               106 Dockerfile
+2023-09-25  오후 02:41                 9 test.txt
+               2개 파일                 115 바이트
+               3개 디렉터리  85,576,339,456 바이트 남음
+```
+
+```powershell
+c:\docker\volume> docker container run -itd --rm myvolume:latest /bin/bash
+b456dffd49dba3b19184550331f1fb5528575f5344b669f3f0cf4d3b9722e51f
+
+c:\docker\volume> docker container ls
+CONTAINER ID   IMAGE             COMMAND       CREATED         STATUS         PORTS     NAMES
+b456dffd49db   myvolume:latest   "/bin/bash"   6 seconds ago   Up 4 seconds             intelligent_bose
+
+c:\docker\volume> docker container exec b456 ls -l /home/share/
+total 4
+```
+
+호스트의 디렉터리를 컨테이너 내부로 복사
+
+```powershell
+-rw-r--r-- 1 root root 5 Sep 25 04:30 testfile
+
+c:\docker\volume> docker container cp .\data\ b456:/home/share/		⇐ 호스트의 디렉터리를 컨테이너 내부로 복사
+Successfully copied 3.07kB to b456:/home/share/
+
+c:\docker\volume> docker container exec b456 ls -l /home/share/
+total 8
+drwxr-xr-x 3 root root 4096 Sep 25 03:08 data
+-rw-r--r-- 1 root root    5 Sep 25 04:30 testfile
+```
+
+호스트의 파일을 컨테이너 내부로 복사
+
+```powershell
+c:\docker\volume> docker container cp .\test.txt b456:/home/share/	⇐ 호스트의 파일을 컨테이너 내부로 복사
+Successfully copied 2.05kB to b456:/home/share/
+
+c:\docker\volume> docker container exec b456 ls -l /home/share/
+total 12
+drwxr-xr-x 3 root root 4096 Sep 25 03:08 data
+-rwxr-xr-x 1 root root    9 Sep 25 05:41 test.txt
+-rw-r--r-- 1 root root    5 Sep 25 04:30 testfile
+```
+
+```powershell
+c:\docker\volume> dir
+ C 드라이브의 볼륨에는 이름이 없습니다.
+ 볼륨 일련 번호: D0A5-3978
+
+ c:\docker\volume 디렉터리
+
+2023-09-25  오후 02:41    <DIR>          .
+2023-09-25  오후 02:41    <DIR>          ..
+2023-09-25  오후 12:08    <DIR>          data
+2023-09-25  오전 11:28               106 Dockerfile
+2023-09-25  오후 02:41                 9 test.txt
+               2개 파일                 115 바이트
+               3개 디렉터리  85,576,765,440 바이트 남음
+```
+
+컨테이너 내부의 파일을 호스트로 복사
+
+```powershell
+c:\docker\volume> docker container cp b456:/home/share/testfile .	⇐ 컨테이너 내부의 파일을 호스트로 복사
+Successfully copied 2.05kB to c:\docker\volume\.
+
+c:\docker\volume> dir
+ C 드라이브의 볼륨에는 이름이 없습니다.
+ 볼륨 일련 번호: D0A5-3978
+
+ c:\docker\volume 디렉터리
+
+2023-09-25  오후 02:48    <DIR>          .
+2023-09-25  오후 02:48    <DIR>          ..
+2023-09-25  오후 12:08    <DIR>          data
+2023-09-25  오전 11:28               106 Dockerfile
+2023-09-25  오후 02:41                 9 test.txt
+2023-09-25  오후 01:30                 5 testfile
+               3개 파일                 120 바이트
+               3개 디렉터리  85,580,115,968 바이트 남음
+```
+
+컨테이너 내부에 있는 data 디렉터리 아래의 내용을 호스트의 temp 디렉터리 아래로 복사

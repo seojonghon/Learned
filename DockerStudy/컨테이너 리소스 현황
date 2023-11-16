@@ -1,0 +1,163 @@
+# 컨테이너 리소스 현황
+
+ 
+
+# **사용 현황 조회**
+
+```powershell
+PS C:\Users\User> docker container rm -f $(docker container ls -aq)
+```
+
+```powershell
+PS C:\Users\User> docker image rm -f $(docker image ls -q)
+```
+
+****컨테이너 리소스 사용 현황****
+
+```powershell
+c:\docker> docker container run -itd --name myubuntu ubuntu
+c:\docker> docker container run -d -p 80 --name mynginx nginx
+```
+
+```powershell
+c:\docker> docker container ls
+CONTAINER ID   IMAGE     COMMAND                   CREATED              STATUS              PORTS                   NAMES
+df404e39ffe5   nginx     "/docker-entrypoint.…"   About a minute ago   Up About a minute   0.0.0.0:56953->80/tcp   mynginx
+d1c08ec35bfa   ubuntu    "/bin/bash"               4 minutes ago        Up 4 minutes                                myubuntu
+```
+
+```powershell
+c:\docker> docker container stats
+CONTAINER ID   NAME       CPU %     MEM USAGE / LIMIT     MEM %     NET I/O       BLOCK I/O   PIDS
+df404e39ffe5   mynginx    0.00%     7.203MiB / 12.27GiB   0.06%     726B / 0B     0B / 0B     9
+d1c08ec35bfa   myubuntu   0.00%     828KiB / 12.27GiB     0.01%     1.05kB / 0B   0B / 0B
+^C
+c:\docker>
+```
+
+****디스크 이용 현황****
+
+```powershell
+c:\docker> docker system df
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          2         2         264.5MB   0B (0%)
+Containers      2         2         1.095kB   0B (0%)
+Local Volumes   0         0         0B        0B
+Build Cache     119       0         612MB     612MB
+```
+
+```powershell
+c:\docker> docker system df -v
+Images space usage:
+
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE      SHARED SIZE   UNIQUE SIZE   CONTAINERS
+nginx        latest    61395b4c586d   5 days ago    187MB     0B            186.6MB       1
+ubuntu       latest    c6b84b685f35   5 weeks ago   77.8MB    0B            77.82MB       1
+```
+
+```powershell
+Containers space usage:
+
+CONTAINER ID   IMAGE     COMMAND                   LOCAL VOLUMES   SIZE      CREATED         STATUS         NAMES
+df404e39ffe5   nginx     "/docker-entrypoint.…"   0               1.09kB    4 minutes ago   Up 4 minutes   mynginx
+d1c08ec35bfa   ubuntu    "/bin/bash"               0               0B        7 minutes ago   Up 7 minutes   myubuntu
+
+Local Volumes space usage:
+
+VOLUME NAME   LINKS     SIZE
+
+Build cache usage: 612MB
+
+CACHE ID       CACHE TYPE     SIZE      CREATED        LAST USED      USAGE     SHARED
+l7o6ybfwciog   regular        0B        5 days ago     5 days ago     1         false
+z6apdys217dy   regular        0B        5 days ago     5 days ago     1         false
+tqe2qkc0h7je   regular        0B        5 days ago     5 days ago     1         false
+			... (생략) ...
+imeytaxi0dn4   regular        5B        20 hours ago   16 hours ago   6         false
+5wbodproxpx4   source.local   0B        22 hours ago   16 hours ago   16        false
+izp2w8uzuo55   source.local   108B      22 hours ago   16 hours ago   16        false
+```
+
+## Formating
+
+```powershell
+c:\docker> docker container ls
+CONTAINER ID   IMAGE     COMMAND                   CREATED          STATUS          PORTS                   NAMES
+df404e39ffe5   nginx     "/docker-entrypoint.…"   8 minutes ago    Up 8 minutes    0.0.0.0:56953->80/tcp   mynginx
+d1c08ec35bfa   ubuntu    "/bin/bash"               11 minutes ago   Up 11 minutes
+```
+
+```powershell
+c:\docker> docker container ls --format "table {{.ID}}\t{{.Command}}"
+CONTAINER ID   COMMAND
+df404e39ffe5   "/docker-entrypoint.…"
+d1c08ec35bfa   "/bin/bash"
+```
+
+```powershell
+c:\docker> docker container ls --no-trunc --format "table {{.ID}}\t{{.Command}}"
+CONTAINER ID                                                       COMMAND
+df404e39ffe53a4e1f2be3fdfddd6690f48fb2e956ca589e657e44f1a1a1a33e   "/docker-entrypoint.sh nginx -g 'daemon off;'"
+d1c08ec35bfa1d83fbb2fa165f10f3aaeeea7430161f394b89eb70bfa7686c51   "/bin/bash"
+```
+
+# **레지스트리 운영**
+
+## **레지스트리 실행**
+
+```powershell
+c:\docker> docker container run -d -p 5000:5000 --name myregistry registry:2
+Unable to find image 'registry:2' locally
+2: Pulling from library/registry
+7264a8db6415: Already exists
+c4d48a809fc2: Pull complete
+88b450dec42e: Pull complete
+121f958bea53: Pull complete
+7417fa3c6d92: Pull complete
+Digest: sha256:d5f2fb0940fe9371b6b026b9b66ad08d8ab7b0d56b6ee8d5c71cb9b45a374307
+Status: Downloaded newer image for registry:2
+481b146aadf9d02df6bc0954df293c1b8dbf6ea9c304f1a901b15340ce094d93
+```
+
+```powershell
+c:\docker> docker container ls
+CONTAINER ID   IMAGE        COMMAND                   CREATED          STATUS          PORTS                    NAMES
+481b146aadf9   registry:2   "/entrypoint.sh /etc…"   22 seconds ago   Up 21 seconds   0.0.0.0:5000->5000/tcp   myregistry
+df404e39ffe5   nginx        "/docker-entrypoint.…"   19 minutes ago   Up 19 minutes   0.0.0.0:56953->80/tcp    mynginx
+d1c08ec35bfa   ubuntu       "/bin/bash"               21 minutes ago   Up 21 minutes                            myubuntu
+```
+
+****도커 허브에서 ubuntu 이미지를 pull****
+
+```powershell
+c:\docker> docker image pull ubuntu
+
+c:\docker> docker image ls
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+ubuntu       latest    c6b84b685f35   5 weeks ago   77.8MB
+registry     2         0030ba3d620c   6 weeks ago   24.1MB
+```
+
+**이미지에 레지스트리 정보를 태깅**
+
+```powershell
+c:\docker> docker image tag ubuntu localhost:5000/myubuntu
+
+c:\docker> docker image ls
+REPOSITORY                TAG       IMAGE ID       CREATED       SIZE
+ubuntu                    latest    c6b84b685f35   5 weeks ago   77.8MB
+localhost:5000/myubuntu   latest    c6b84b685f35   5 weeks ago   77.8MB
+registry                  2         0030ba3d620c   6 weeks ago   24.1MB
+```
+
+**로컬 레지스트리로 이미지를 push**
+
+```powershell
+c:\docker> docker image push localhost:5000/myubuntu
+Using default tag: latest
+The push refers to repository [localhost:5000/myubuntu]
+dc0585a4b8b7: Pushed
+latest: digest: sha256:1f77fcf82cc387f6e40e7ca28ba98f5c7241d4211481d9e5532e8ea54e0d9ad5 size: 529
+```
+
+**로컬 레지스트리에서 이미지를 pull**

@@ -1,0 +1,63 @@
+# 도커허브 연동
+
+## **도커 허브에 계정 생성 후 로그인**
+
+https://hub.docker.com/
+
+https://lh6.googleusercontent.com/7vZDLA1eR6ngS9L7k-geDThad4Gjo9mSx05Nz4jUum5xi0dSLiu8f0XcPHuzbwGvyHLx_mhWvSmsYfpGS15FZCxSVhz2vZHiX9vjqQFHZeB2hYTUmj09HmmTPPbEE-G8xxjXIFzwSyjpJ4EjL3Un6F8
+
+```powershell
+c:\docker\volume> docker image push myvolume:latest
+The push refers to repository [docker.io/library/myvolume]
+f2b99a479a7d: Preparing
+63b1c01fb4d2: Preparing
+dc0585a4b8b7: Preparing
+denied: requested access to the resource is denied
+```
+
+```powershell
+c:\docker\volume> docker image tag myvolume:latest seojonghun/myvolume:latest
+                                                   ~~~~~~~~
+c:\docker\volume> docker image ls                  docker hub의 계정
+REPOSITORY          TAG       IMAGE ID       CREATED          SIZE
+myvolume            latest    1fe19554dfa5   49 minutes ago   77.8MB
+seojonghun/myvolume   latest    1fe19554dfa5   49 minutes ago   77.8MB
+myvolume            1.0       9bb8c11974a6   52 minutes ago   77.8MB
+<none>              <none>    24d31081417b   2 hours ago      77.8MB
+```
+
+```powershell
+c:\docker\volume> docker image push seojonghun/myvolume:latest
+The push refers to repository [docker.io/myanjini/myvolume]
+f2b99a479a7d: Preparing
+63b1c01fb4d2: Preparing
+dc0585a4b8b7: Preparing
+denied: requested access to the resource is denied
+	
+c:\docker\volume> docker login
+Log in with your Docker ID or email address to push and pull images from Docker Hub. If you don't have a Docker ID, head over to https://hub.docker.com/ to create one.
+You can log in with your password or a Personal Access Token (PAT). Using a limited-scope PAT grants better security and is required for organizations using SSO. Learn more at https://docs.docker.com/go/access-tokens/
+
+Username: seojonghun
+Password: 도커 허브 패스워드 	
+Login Succeeded
+```
+
+```powershell
+c:\docker\volume> docker image push seojonghun/myvolume:latest
+The push refers to repository [docker.io/myanjini/myvolume]
+f2b99a479a7d: Pushed
+63b1c01fb4d2: Pushed
+dc0585a4b8b7: Mounted from library/ubuntu
+latest: digest: sha256:00e922bf39f9b00403e8a4dd5931b49f8cba380df6577514fb62cf6ba3a18141 size: 943
+```
+
+도커 허브에서 이미지가 등록된 것을 확인
+
+![Untitled](https://prod-files-secure.s3.us-west-2.amazonaws.com/1b8cc88d-9972-478f-9c35-51d6c2e63848/3a8daa4a-f509-4363-9885-3eab2f869792/Untitled.png)
+
+```powershell
+docker container run -it myanjini/myvolume:latest /bin/bash
+```
+
+denied: requested access to the resource is denied의 원인 = push를 안하면 안됨
