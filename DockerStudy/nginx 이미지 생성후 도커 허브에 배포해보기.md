@@ -109,8 +109,8 @@ nginx                  latest    61395b4c586d   4 days ago      187MB
 ****#6 생성한 이미지를 도커 허브에 등록****
 
 ```powershell
-c:\docker\mywebserver> docker image push myanjini/mywebserver:1.0
-The push refers to repository [docker.io/myanjini/mywebserver]
+c:\docker\mywebserver> docker image push seojonghun/mywebserver:1.0
+The push refers to repository [docker.io/seojonghun/mywebserver]
 9bc35f76be3b: Pushed
 d26d4f0eb474: Mounted from library/nginx
 a7e2a768c198: Mounted from library/nginx
@@ -173,7 +173,7 @@ c:\docker\mywebserver> docker image build -t seojonghun/mywebserver:2.0 .
  => exporting to image                                                  0.0s
  => => exporting layers                                                 0.0s
  => => writing image sha256:17880d7e941914335bca495549d3839cb25283cf31  0.0s
- => => naming to docker.io/myanjini/mywebserver:2.0                     0.0s
+ => => naming to docker.io/seojonghun/mywebserver:2.0                     0.0s
 ```
 
 ```powershell
@@ -187,14 +187,14 @@ nginx                  latest    61395b4c586d   4 days ago       187MB
 ****#4 컨테이너 실행****
 
 ```powershell
-c:\docker\mywebserver> docker container run -d -p 80 myanjini/mywebserver:2.0
+c:\docker\mywebserver> docker container run -d -p 80 seojonghun/mywebserver:2.0
 0ad184113fbd27699b51d1f21f2a2cce28787d0510e49af0bc3a5e09b2088742
 ```
 
 ```powershell
 c:\docker\mywebserver> docker container ls
 CONTAINER ID   IMAGE                      COMMAND                   CREATED          STATUS          PORTS                   NAMES
-0ad184113fbd   myanjini/mywebserver:2.0   "/docker-entrypoint.…"   5 seconds ago    Up 4 seconds    0.0.0.0:54051->80/tcp   wizardly_mirzakhani
+0ad184113fbd   seojonghun/mywebserver:2.0   "/docker-entrypoint.…"   5 seconds ago    Up 4 seconds    0.0.0.0:54051->80/tcp   wizardly_mirzakhani
 fc12ce89f88e   nginx                      "/docker-entrypoint.…"   15 minutes ago   Up 15 minutes   0.0.0.0:53918->80/tcp   mywebserver
 ```
 
@@ -205,8 +205,8 @@ https://lh3.googleusercontent.com/8de323ZVjZeCI14CUe03a5xgOpHcZNnoHGrdicvFGfdhsQ
 ### **#6 생성한 이미지를 도커 허브에 등록**
 
 ```powershell
-c:\docker\mywebserver> docker image push myanjini/mywebserver:2.0
-The push refers to repository [docker.io/myanjini/mywebserver]
+c:\docker\mywebserver> docker image push seojonghun/mywebserver:2.0
+The push refers to repository [docker.io/seojonghun/mywebserver]
 96676e06b177: Pushed
 d26d4f0eb474: Layer already exists
 a7e2a768c198: Layer already exists

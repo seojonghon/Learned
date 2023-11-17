@@ -61,7 +61,7 @@ b0ab57229bd4   myvolume:2.0   "/bin/bash"   34 minutes ago   Up 34 minutes �
 ```
 
 ```powershell
-PS C:\Users\myanj> docker container stop **$(docker container ls --filter "ancestor=myvolume:2.0" -q)**
+PS C:\Users\User> docker container stop **$(docker container ls --filter "ancestor=myvolume:2.0" -q)**
 
 ed463f718600
 
@@ -71,7 +71,7 @@ b0ab57229bd4
 ```
 
 ```powershell
-PS C:\Users\myanj> docker container ls
+PS C:\Users\User> docker container ls
 CONTAINER ID   IMAGE          COMMAND       CREATED         STATUS         PORTS     NAMES
 b0cf2641360e   myvolume:1.0   "/bin/bash"   4 minutes ago   Up 4 minutes             mycontainerv1
 ```

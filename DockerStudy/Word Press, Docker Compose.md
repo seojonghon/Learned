@@ -358,7 +358,7 @@ C:\docker\docker-compose> docker-compose up		⇐ attach 모드로 실행
 ****별도의 명령 프롬프트를 실행해서 컨테이너 실행을 확인****
 
 ```powershell
-C:\Users\myanj> docker container ls
+C:\Users\User> docker container ls
 CONTAINER ID   IMAGE       COMMAND                   CREATED              STATUS              PORTS                   NAMES
 52a9c1206509   wordpress   "docker-entrypoint.s…"   About a minute ago   Up About a minute   0.0.0.0:65101->80/tcp   docker-compose-wordpress-1
 ff29b65f4642   mysql:5.7   "docker-entrypoint.s…"   About a minute ago   Up About a minute   3306/tcp, 33060/tcp     docker-compose-wordpressdb-1
@@ -367,7 +367,7 @@ a5b34d0fd822   wordpress   "docker-entrypoint.s…"   About an hour ago    Up Ab
 ```
 
 ```powershell
-C:\Users\myanj> cd c:\docker\docker-compose
+C:\Users\User> cd c:\docker\docker-compose
 
 c:\docker\docker-compose> docker-compose down
 [+] Running 3/3
