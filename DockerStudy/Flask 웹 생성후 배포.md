@@ -58,9 +58,9 @@ WARNING: This is a development server. Do not use it in a production deployment.
 Press CTRL+C to quit
 ```
 
-![Alt text](image-10.png)
-![Alt text](image-11.png)
-![Alt text](image-12.png)
+![Alt text](img/image-10.png)
+![Alt text](img/image-11.png)
+![Alt text](img/image-12.png)
 
 ```powershell
 (venv) C:\docker\flask>python -m flask run --host=0.0.0.0
@@ -180,7 +180,7 @@ if __name__ == "__main__":
             }
 ```
 
-![Alt text](image-15.png)
+![Alt text](img/image-15.png)
 **nginx.conf 파일 작성**
 
 ```python
